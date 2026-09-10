@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html>
-<body>
-
-<h1>My Pirst Heading</h1>
-
-<p>My first paragraph.</p>
-
-</body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Audio TTS</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Audio Recorder</h1>
+		<!--Buttons and stuff-->
+        <button id="record-btn">Record</button>
+        <button id="stop-cancel-btn" disabled>Pause</button>
+        <button id="finish-btn" disabled>Finish</button>
+		<br><br>
+		
+		<!--Play back what the user said-->
+        <audio id="audio-hearing" controls></audio>
+		<br>
+		<!--Send audio recording to java server-->
+        <button id="send-btn" disabled>Send to Server</button> 
+		
+		<div class="text-out">
+			<h1 class="output-text" id="out-text">Hello world!</h1>
+		</div>
+		
+        <script src="app.js"></script>
+    </body>
 </html>
-

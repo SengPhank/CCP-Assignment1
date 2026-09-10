@@ -1,0 +1,12 @@
+@import url('https://googleapis.com'); /* Get roboto font */
+
+.text-out {
+	width: 50%;
+	background-color: antiquewhite;
+}
+
+.output-text {
+	font-family: 'Roboto', sans-serif;
+	color: cornflowerblue;
+	font-size: 22.67px;
+}
