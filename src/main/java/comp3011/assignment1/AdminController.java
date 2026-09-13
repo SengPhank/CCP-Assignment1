@@ -1,7 +1,12 @@
 package comp3011.assignment1;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.Instant;
 
@@ -12,6 +17,15 @@ public class AdminController {
 	private final Instant serverStartUTC = Instant.now();
 	private final long serverStartMilli = System.currentTimeMillis();
 	
+	// Is the application shutting down yet
+	private boolean isShuttingDown = false;
+	
+	// Store the application container (so we can delete/shutdown later)
+	private ApplicationContext context;
+	public AdminController(ApplicationContext context) {
+		this.context = context;
+	}
+	
     @GetMapping("/api/v1/admin/uptime")
     public UptimeResponse getServerUpTime( ) {
     	
@@ -20,11 +34,33 @@ public class AdminController {
         return new UptimeResponse(serverStartUTC, Instant.now(), timeElapsed);
     }
     
-    @GetMapping("/api/v1/admin/shutdown")
-    public ShutdownResponse reqShutdown() {
+    @PostMapping("/api/v1/admin/shutdown")
+    public ResponseEntity<?> reqShutdown(HttpServletRequest req) {
+    	// Reject shutdown if already shutting down
+    	if (isShuttingDown) {
+            ErrorResponse newErr = new ErrorResponse(
+                Instant.now(),
+                409,
+                "Conflict",
+                "Graceful shutdown is already in progress.",
+                req.getRequestURI()
+            );
+            return ResponseEntity.status(409).body(newErr);
+        }
+    	isShuttingDown = true;
     	
-    	// Shutdown server TODO
+    	// Give time for client to receive shutdown response, then shutdown GRACEFULLY.
+    	// We use and create a new Thread to allow this to happen; otherwise the code will immediately exit the server.
+    	new Thread(() -> {
+    		try {
+    			Thread.sleep(500);
+    		} catch (InterruptedException ignored) {}
+    		System.out.println("Shutting down...");
+    		int exitCode = org.springframework.boot.SpringApplication.exit(context, () -> 0);
+    		System.exit(exitCode);
+    	}).start();
     	
-    	return new ShutdownResponse("Graceful shutdown requested");
+    	ShutdownResponse newResp = new ShutdownResponse("Graceful shutdown requested.");
+    	return ResponseEntity.status(202).body(newResp);
     }
 }

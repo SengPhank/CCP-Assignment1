@@ -152,12 +152,12 @@ function updateOutText() {
 async function sendAPICall() {
 	// Get custom api path from textbox
 	let url = inputText.value;
-	inputText.value="";
-	console.log(`attmpting send %{url}`);
+	// inputText.value="";
+	console.log(`attmpting send ${url}`);
 	
 	// Send a request to the api at "url"
 	try {
-		const resp = await fetch(url);
+		const resp = await fetch(url, {method : "POST"});
 		if (!resp.ok) {
 			throw new Error(`Resp Status: ${resp.status}`);
 		}
