@@ -10,6 +10,9 @@ let finishBtn = document.getElementById("finish-btn");
 let audioHearing = document.getElementById("audio-hearing");
 let sendBtn = document.getElementById("send-btn");
 
+let inputText = document.getElementById("url-input");
+let testBtn = document.getElementById("test-btn");
+
 // Define other ids
 let outText = document.getElementById("out-text");
 
@@ -128,6 +131,7 @@ function finishRecording() {
 	finishBtn.disabled = true;
 }
 
+// Temp function
 function updateOutText() {
 	let randomText = "Out: ";
 	
@@ -144,7 +148,31 @@ function updateOutText() {
 	outText.textContent = randomText;
 }
 
+// Test function
+async function sendAPICall() {
+	// Get custom api path from textbox
+	let url = inputText.value;
+	inputText.value="";
+	console.log(`attmpting send %{url}`);
+	
+	// Send a request to the api at "url"
+	try {
+		const resp = await fetch(url);
+		if (!resp.ok) {
+			throw new Error(`Resp Status: ${resp.status}`);
+		}
+		const res = await resp.json();
+		console.log(`API said ${res}`);
+		
+	} catch (err) {
+		console.error(`Failed because ${err}`);
+	}
+}
+
 recordBtn.addEventListener("click", startResumeRecording);
 stpCnclBtn.addEventListener("click", pauseCancelRecording);
 finishBtn.addEventListener("click", finishRecording);
 sendBtn.addEventListener("click", updateOutText); // temporary feature
+
+testBtn.addEventListener("click", sendAPICall);
+
