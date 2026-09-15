@@ -131,6 +131,37 @@ function finishRecording() {
 	finishBtn.disabled = true;
 }
 
+async function sendAudioToServer() {
+    if (!blob) {
+        console.error("No audio found");
+        return;
+    }
+
+    // Pack the blob into multipart form data
+    const formData = new FormData();
+    formData.append("file", blob, "recording.webm");
+
+    try {
+        // Send audio to java backend via POST
+        const resp = await fetch("/api/v1/audio", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!resp.ok) throw new Error(`Server returned status: ${resp.status}`);
+
+        const data = await resp.json();
+        console.log("Transcription result:", data);
+        outText.textContent = data.message;
+		
+    } catch (err) {
+        console.error("Failed to upload audio because:", err);
+		outText.textContent = "Transcribed message: " + err;
+    }
+}
+
+
+
 // Temp function
 function updateOutText() {
 	let randomText = "Out: ";
@@ -172,7 +203,8 @@ async function sendAPICall() {
 recordBtn.addEventListener("click", startResumeRecording);
 stpCnclBtn.addEventListener("click", pauseCancelRecording);
 finishBtn.addEventListener("click", finishRecording);
-sendBtn.addEventListener("click", updateOutText); // temporary feature
+// sendBtn.addEventListener("click", updateOutText); // temporary feature
+sendBtn.addEventListener("click", sendAudioToServer);
 
 testBtn.addEventListener("click", sendAPICall);
 

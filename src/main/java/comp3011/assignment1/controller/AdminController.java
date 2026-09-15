@@ -1,4 +1,4 @@
-package comp3011.assignment1;
+package comp3011.assignment1.controller;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import comp3011.assignment1.responses.ErrorResponse;
+import comp3011.assignment1.responses.ShutdownResponse;
+import comp3011.assignment1.responses.UptimeResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.Instant;

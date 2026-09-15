@@ -1,4 +1,4 @@
-package comp3011.assignment1;
+package comp3011.assignment1.responses;
 
 import java.time.Instant;
 
@@ -8,4 +8,4 @@ public record ErrorResponse(
     String error, // Error code convention (Get it from HttpStatus Library)
     String message, // Human-readable error reason
     String path // Path-to-API-call
-) {}
+) {};
