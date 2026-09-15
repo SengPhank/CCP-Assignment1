@@ -5,21 +5,15 @@ let blob = null;      // Store final audio
 
 // Define buttons
 let recordBtn = document.getElementById("record-btn");
-let stpCnclBtn = document.getElementById("stop-cancel-btn"); // stop and cancel 
-let finishBtn = document.getElementById("finish-btn");
+let stopBtn = document.getElementById("stop-btn"); 
+let cancelBtn = document.getElementById("cancel-btn");
 let audioHearing = document.getElementById("audio-hearing");
-let sendBtn = document.getElementById("send-btn");
 
 let inputText = document.getElementById("url-input");
 let testBtn = document.getElementById("test-btn");
-let statusText = document.getElementById("status-txt");
 
 // Define other ids
 let outText = document.getElementById("out-text");
-
-// Define variables
-let paused = false;
-let recording = false;
 
 async function startRecording() {
     chunks = [];
@@ -58,86 +52,58 @@ async function startRecording() {
         if (chunks.length > 0) {
             blob = new Blob(chunks, { type: mimeType });
             const audioUrl = URL.createObjectURL(blob);
-            audioHearing.src = audioUrl;
+			if (audioHearing) {
+                audioHearing.src = audioUrl;
+            }
         }
 
-        recording = false;
-        paused = false;
-        recordBtn.textContent = "Start";
         recordBtn.disabled = false;
-        stpCnclBtn.textContent = "Pause";
-        stpCnclBtn.disabled = true;
+        stopBtn.disabled = true;
+		stopBtn.disabled = true;
+		
+		// Send audio to server IMMEDIATELY after "stop" is ran. 
+		sendAudioToServer();
     };
 
     // Start recording
     audioRecorder.start();
-    paused = false;
-    recording = true;
 
-    // Update buttons and variables
-    recordBtn.textContent = "Resume";
-    stpCnclBtn.textContent = "Pause";
-
+    // Update buttons
     recordBtn.disabled = true;
-    stpCnclBtn.disabled = false;
-    finishBtn.disabled = true;
+    stopBtn.disabled = false;
+	cancelBtn.disabled = true;
 }
 
-function startResumeRecording() {
-    // Not currently recording, start now
-    if (!recording) {
-        startRecording();
-		statusText.textContent = "Recording Status: Recording";
-    // Already recording, clicked to resume
-    } else if (paused) {
-        audioRecorder.resume();
-        paused = false;
-		
-		finishBtn.disabled = true;
-        recordBtn.disabled = true;
-        stpCnclBtn.textContent = "Pause";
-		statusText.textContent = "Recording Status: Recording";
-    }
-}
-
-function pauseCancelRecording() {
-    if (!audioRecorder || !recording) return;
-
-    // Not paused, pause the recording now
-    if (!paused) {
-        audioRecorder.pause();
-        paused = true;
-
-        stpCnclBtn.textContent = "Cancel";
-        recordBtn.disabled = false; 
-		finishBtn.disabled = false;
-		statusText.textContent = "Recording Status: Paused";
-    // Already paused, cancel the recording
-    } else {
-        // Reset state and discard
-        chunks = [];
-        blob = null;
-        if (audioHearing) audioHearing.src = "";
-		
-        if (audioRecorder.state !== "inactive") {
-            audioRecorder.stop();
-        }
-
-        finishBtn.disabled = true;
-		statusText.textContent = "Recording Status: Waiting to record";
-    }
-}
-
-// Stop audio capture and trigger onstop to build the blob
-function finishRecording() {
+// Pause recording
+function stopRecording() {
     if (audioRecorder && audioRecorder.state !== "inactive") {
         audioRecorder.stop();
     }
-	finishBtn.disabled = true;
-	statusText.textContent = "Recording Status: Waiting to record";
+    stopBtn.disabled = true;
+}
+
+function clearRecording() {
+	// Discard and reset audio state
+    chunks = [];
+    blob = null;
+	
+	// Audio hearing src
+    if (audioHearing) audioHearing.src = "";
+	
+	// Stop the audio recording if there is an audiorecorder
+    if (audioRecorder && audioRecorder.state !== "inactive") {
+        audioRecorder.stop();
+    }
+
+    recordBtn.disabled = false;
+    stopBtn.disabled = true;
+    cancelBtn.disabled = true;
 }
 
 async function sendAudioToServer() {
+	// must stop audio recorder before continuing
+	if (!audioRecorder && audioRecorder.state === "recording") return;
+	
 	outText.textContent = "Getting audio to backend...";
     if (!blob) {
         console.error("No audio found");
@@ -208,11 +174,10 @@ async function sendAPICall() {
 	}
 }
 
-recordBtn.addEventListener("click", startResumeRecording);
-stpCnclBtn.addEventListener("click", pauseCancelRecording);
-finishBtn.addEventListener("click", finishRecording);
+recordBtn.addEventListener("click", startRecording);
+stopBtn.addEventListener("click", stopRecording);
+cancelBtn.addEventListener("click", clearRecording);
 // sendBtn.addEventListener("click", updateOutText); // temporary feature
-sendBtn.addEventListener("click", sendAudioToServer);
 
 testBtn.addEventListener("click", sendAPICall);
 
