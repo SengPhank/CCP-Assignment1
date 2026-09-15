@@ -1,25 +1,28 @@
 package comp3011.assignment1.services;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class StatService {
 	
 	// Use atomic variables in case a bunch of users decide to update inputs used
-	public final AtomicLong currentInputToken = new AtomicLong(0);
-	public final AtomicLong currentOutputToken = new AtomicLong(0);
+	public final AtomicInteger currentInputToken = new AtomicInteger(0);
+	public final AtomicInteger currentOutputToken = new AtomicInteger(0);
 	
-	// Update atmoic longs
+	// Update Atomic integers
 	public void addTokens(Integer inp, Integer out) {
 		currentInputToken.getAndAdd(inp);
 		currentOutputToken.getAndAdd(out);
 	}
 	
 	// Get functions
-	public long getInputToken() {
+	public Integer getInputToken() {
 		return currentInputToken.get();
 	}
 	
-	public long getOutputToken() {
+	public Integer getOutputToken() {
 		return currentOutputToken.get();
 	}
 }

@@ -12,6 +12,7 @@ let sendBtn = document.getElementById("send-btn");
 
 let inputText = document.getElementById("url-input");
 let testBtn = document.getElementById("test-btn");
+let statusText = document.getElementById("status-txt");
 
 // Define other ids
 let outText = document.getElementById("out-text");
@@ -86,6 +87,7 @@ function startResumeRecording() {
     // Not currently recording, start now
     if (!recording) {
         startRecording();
+		statusText.textContent = "Recording Status: Recording";
     // Already recording, clicked to resume
     } else if (paused) {
         audioRecorder.resume();
@@ -94,6 +96,7 @@ function startResumeRecording() {
 		finishBtn.disabled = true;
         recordBtn.disabled = true;
         stpCnclBtn.textContent = "Pause";
+		statusText.textContent = "Recording Status: Recording";
     }
 }
 
@@ -108,18 +111,20 @@ function pauseCancelRecording() {
         stpCnclBtn.textContent = "Cancel";
         recordBtn.disabled = false; 
 		finishBtn.disabled = false;
+		statusText.textContent = "Recording Status: Paused";
     // Already paused, cancel the recording
     } else {
         // Reset state and discard
         chunks = [];
         blob = null;
         if (audioHearing) audioHearing.src = "";
-
+		
         if (audioRecorder.state !== "inactive") {
             audioRecorder.stop();
         }
 
         finishBtn.disabled = true;
+		statusText.textContent = "Recording Status: Waiting to record";
     }
 }
 
@@ -129,13 +134,16 @@ function finishRecording() {
         audioRecorder.stop();
     }
 	finishBtn.disabled = true;
+	statusText.textContent = "Recording Status: Waiting to record";
 }
 
 async function sendAudioToServer() {
+	outText.textContent = "Getting audio to backend...";
     if (!blob) {
         console.error("No audio found");
         return;
     }
+	outText.textContent = "Sending audio to backend...";
 
     // Pack the blob into multipart form data
     const formData = new FormData();
@@ -188,7 +196,7 @@ async function sendAPICall() {
 	
 	// Send a request to the api at "url"
 	try {
-		const resp = await fetch(url, {method : "POST"});
+		const resp = await fetch(url, {method : "GET"});
 		if (!resp.ok) {
 			throw new Error(`Resp Status: ${resp.status}`);
 		}

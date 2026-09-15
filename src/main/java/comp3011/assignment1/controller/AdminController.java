@@ -58,7 +58,7 @@ public class AdminController {
     		try {
     			Thread.sleep(500);
     		} catch (InterruptedException ignored) {}
-    		System.out.println("Shutting down...");
+    		// System.out.println("Shutting down...");
     		int exitCode = org.springframework.boot.SpringApplication.exit(context, () -> 0);
     		System.exit(exitCode);
     	}).start();
