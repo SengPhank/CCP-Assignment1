@@ -5,29 +5,40 @@
         <title>Audio TTS</title>
         <link rel="stylesheet" href="style.css">
     </head>
-	
+
     <body>
-        <h1>Audio Recorder</h1>
-		<!--Buttons and stuff-->
-        <button id="record-btn">Record</button>
-        <button id="stop-btn" disabled>Stop</button>
-		<button id="cancel-btn" disabled>Cancel Recording</button>
-		<br><br>
-		
-		<!--Play back what the user said-->
-        <audio id="audio-hearing" controls></audio>
-		<br>	
-		<div class="text-out">
-			<h1 class="output-text" id="out-text">Your transcription will appear here</h1>
-		</div>
-		
-		<button id="open-debug">Open debug menu</button>
-		<!--Pure test features-->
-		<input type="text" id="url-input">
-		<br><br>
-		<button id="test-btn">Test</button>
-		
-		<!--Scripts-->
+        <div class="top-container">
+            <div class="inputs">
+                <h1>Audio Recorder</h1>
+                <div class="button-row">
+                    <button id="record-btn">Record</button>
+                    <button id="stop-btn" disabled>Stop</button>
+                    <button id="cancel-btn" disabled>Cancel Recording</button>
+                </div>
+
+                <audio id="audio-hearing" controls></audio>
+            </div>
+
+            <div class="text-out">
+                <h1 class="output-text" id="out-text">Your transcription will appear here</h1>
+            </div>
+        </div>
+
+        <div class="bottom-container">
+			<h1 style="text-decoration: underline; font-weight: bold;">Debug/Testing Panel</h1>
+			<div>
+				<h2>1. Generate a random transcribed text and reveal it in the textbox to observe what happens when too much text is received</h2>
+				<button id="random-transcribe">Generate Transcribe</button>
+				
+			</div>
+            <div>
+				<h2>2. Send post/get request to the given url</h2>
+                <input type="text" id="api-url-input" placeholder="/api/v1/admin/uptime">
+                <button id="api-post-btn">POST</button>
+				<button id="api-get-btn">GET</button>
+            </div>
+        </div>
+
         <script src="app.js"></script>
     </body>
 </html>

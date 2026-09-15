@@ -1,12 +1,112 @@
-@import url('https://googleapis.com'); /* Get roboto font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap'); /* get roboto font */
+
+/* ======================== global css ======================== */
+* {
+	font-family: 'Roboto', sans-serif;
+}
+body {
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 2rem;
+    color: #2b2b2b;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+h2 {
+	font-size: 15px;
+    font-weight: 300;
+}
+button {
+    font-size: 15px;
+    padding: 0.5rem 1.1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: rgb(255, 128, 64);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+    background-color: rgb(255, 88, 9);
+}
+
+button:disabled {
+    background-color: #c7cdd6;
+    cursor: not-allowed;
+}
+
+
+input[type=text] {
+  padding: 0.5rem 1.1rem;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+/* ======================== Inputs and main features, top containers ======================== */
+.top-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+	
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.inputs {
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    flex: 1;
+    min-width: 500px;
+	
+	border-radius: 25px;
+	border: 2px solid rgb(192, 192, 192);
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
 
 .text-out {
-	width: 50%;
-	background-color: antiquewhite;
+    background-color: rgb(220, 217, 214);
+    border-radius: 6px;
+    min-width: 750px;
+	min-height: 500px;
+	padding: 1.5rem;
+	display: flex; 
+	
+	border-radius: 25px;
+	border: 5px solid rgb(0, 0, 0);
+       
 }
 
 .output-text {
-	font-family: 'Roboto', sans-serif;
-	color: cornflowerblue;
-	font-size: 22.67px;
+    color: rgb(44, 44, 44);
+    font-size: 18px;
+    text-align: center;
+    margin: 0;
+	
+	width: 750px;
+	height: 500px;
+	overflow: hidden;
 }
+
+/* ======================== Debug panel, bottom container ========================*/
+.bottom-container {
+	/* background-color: red;*/
+    width: 100%;
+    margin: 2rem auto 0;
+}
+
+
+
+

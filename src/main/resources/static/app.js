@@ -9,9 +9,6 @@ let stopBtn = document.getElementById("stop-btn");
 let cancelBtn = document.getElementById("cancel-btn");
 let audioHearing = document.getElementById("audio-hearing");
 
-let inputText = document.getElementById("url-input");
-let testBtn = document.getElementById("test-btn");
-
 // Define other ids
 let outText = document.getElementById("out-text");
 
@@ -134,14 +131,22 @@ async function sendAudioToServer() {
     }
 }
 
+recordBtn.addEventListener("click", startRecording);
+stopBtn.addEventListener("click", stopRecording);
+cancelBtn.addEventListener("click", clearRecording);
 
+// TEST/DEBUG FEATURES =====================================================================================
+let inputText = document.getElementById("api-url-input");
+let postBtn = document.getElementById("api-post-btn");
+let getBtn = document.getElementById("api-get-btn");
+let genTrans = document.getElementById("random-transcribe");
 
 // Temp function
 function updateOutText() {
-	let randomText = "Out: ";
+	let randomText = "";
 	
-	// Random number between x and y
-	const x = 40; const y = 200;
+	// Random string of length between x and y
+	const x = 500; const y = 10000;
 	const textLen = Math.floor(Math.random() * (y - x + 1)) + 32;
 	
 	for (let i = 0; i < textLen; i++) {
@@ -154,15 +159,15 @@ function updateOutText() {
 }
 
 // Test function
-async function sendAPICall() {
+async function sendAPICall(meth) {
+	if (meth !== "POST") meth = "GET";
 	// Get custom api path from textbox
 	let url = inputText.value;
-	// inputText.value="";
 	console.log(`attmpting send ${url}`);
 	
 	// Send a request to the api at "url"
 	try {
-		const resp = await fetch(url, {method : "GET"});
+		const resp = await fetch(url, {method : meth});
 		if (!resp.ok) {
 			throw new Error(`Resp Status: ${resp.status}`);
 		}
@@ -174,10 +179,6 @@ async function sendAPICall() {
 	}
 }
 
-recordBtn.addEventListener("click", startRecording);
-stopBtn.addEventListener("click", stopRecording);
-cancelBtn.addEventListener("click", clearRecording);
-// sendBtn.addEventListener("click", updateOutText); // temporary feature
-
-testBtn.addEventListener("click", sendAPICall);
-
+postBtn.addEventListener("click", function(){sendAPICall("POST")});
+getBtn.addEventListener("click", function(){sendAPICall("GET")});
+genTrans.addEventListener("click", updateOutText);
